@@ -20,6 +20,7 @@ public class Program {
 			if(n<1)
 				throw new Exception("The number of input is less than 1");
 			int buf[] = new int[n];
+			out.println("Enter "+n+" numbers");
 			for(int i=0;i<n;i++) {
 				buf[i] = reader.nextInt();
 			}

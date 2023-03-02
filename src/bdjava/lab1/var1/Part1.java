@@ -1,9 +1,11 @@
-package bdjava.lab1_1;
+package bdjava.lab1.var1;
 import static java.lang.System.*;
 import java.util.Scanner;
 
-public class Lab1_1 {
+public class Part1 {
+
 	// Создать приложение для ввода пароля из командной строки и сравнения его со строкой-образцом
+	
 	public static void main(String[] args) {
 		final String sample = "qwerty";
 		Scanner reader = new Scanner(in);

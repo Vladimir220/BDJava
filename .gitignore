@@ -25,6 +25,6 @@ replay_pid*
 
 *.project
 *.classpath
-*/.settings/
-*/bin/
+.settings/
+bin/
 *.exe

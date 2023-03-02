@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class Part1 {
 
-	// Создать приложение для ввода пароля из командной строки и сравнения его со строкой-образцом
+// Задание 4
+// Создать приложение для ввода пароля из командной строки и сравнения его со строкой-образцом
 	
 	public static void main(String[] args) {
 		final String sample = "qwerty";

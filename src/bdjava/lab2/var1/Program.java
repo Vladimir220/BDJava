@@ -4,11 +4,15 @@ import java.util.Scanner;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 public class Program {
 /*
- * 6. Ввести n слов с консоли. Найти слово, символы в котором идут в строгом порядке 
+ * Ввести n слов с консоли. 
+ * 6. Найти слово, символы в котором идут в строгом порядке 
  * возрастания их кодов. Если таких слов несколько, найти первое из них.
+ * 7. Найти слово, состоящее только из различных символов. Если таких 
+ * слов несколько, найти первое из них.
  */
 	public static void main(String[] args) {
 		int n;
@@ -22,21 +26,10 @@ public class Program {
 				throw new Exception("The number of input is less than 1");
 			String buf[] = new String[n];
 			out.println("Enter "+n+" lines");
-			for(int i=0;i<n;i++) {
+			for(int i=0;i<n;i++)
 				buf[i] = reader.nextLine();
-			} // ввели полностью, как в задании требуется, но можно было бы прервать, когда слово бы нашлось
-			for(int i=0;i<n;i++) {
-				boolean isInc = true;
-				for(int j=1;j<buf[i].length();j++)
-					if(buf[i].charAt(j) <= buf[i].charAt(j-1))
-						isInc = false;
-				if(isInc) {
-					out.println(buf[i]+" - first ascending word");
-					break;
-				}
-				else
-					isInc = true;
-			}
+			strictInc(buf);
+			originalString(buf);			
 		}
 		catch(Exception e) {
 			out.println("Error("+e.getMessage()+')');
@@ -54,4 +47,33 @@ public class Program {
 		
 	}
 
+	private static void strictInc(String[] buf) {
+		for(String str : buf) {
+			boolean isInc = true;
+			for(int j=1;j<str.length();j++)
+				if(str.charAt(j) <= str.charAt(j-1))
+					isInc = false;
+			if(isInc) {
+				out.println(str+" - first ascending word");
+				break;
+			}
+			else
+				isInc = true;
+		}
+	}
+	
+	private static void originalString(String[] buf) {
+		for(String str : buf) {
+			HashSet<Character> set = new HashSet<Character>();
+			boolean isOriginal = true;
+			for(int i=0;i<str.length();i++)
+				if(!set.add(str.charAt(i)))
+					isOriginal = false;
+			if(isOriginal) {
+				out.println(str+" - first original word");
+				break;
+			}
+			isOriginal = true;
+		}
+	}
 }

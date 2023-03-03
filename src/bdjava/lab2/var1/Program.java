@@ -1,11 +1,11 @@
-package bdjava.lab2;
+package bdjava.lab2.var1;
 import static java.lang.System.*;
 import java.util.Scanner;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Lab2 {
+public class Program {
 /*
  * 6. Ввести n слов с консоли. Найти слово, символы в котором идут в строгом порядке 
  * возрастания их кодов. Если таких слов несколько, найти первое из них.

@@ -24,7 +24,7 @@ public class Program {
 			reader.nextLine();
 			if(n<1)
 				throw new Exception("The number of input is less than 1");
-			String buf[] = new String[n];
+			String[] buf = new String[n];
 			out.println("Enter "+n+" lines");
 			for(int i=0;i<n;i++)
 				buf[i] = reader.nextLine();
@@ -43,7 +43,7 @@ public class Program {
 		calendar.set(Calendar.MINUTE, 39);
 		out.println("Getting a task: " +calendar.getTime());
 		Date currentDate = new Date();
-		out.println("Task completion: " + currentDate.toString());
+		out.println("Task completion: " + currentDate);
 		
 	}
 

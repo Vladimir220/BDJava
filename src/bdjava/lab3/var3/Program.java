@@ -1,4 +1,4 @@
-package bdjava.lab3.var4;
+package bdjava.lab3.var3;
 
 import java.util.ArrayList;
 

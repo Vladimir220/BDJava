@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.lang.Math;
-import java.util.List;
 
 /*
 Создать классы, спецификации которых приведены ниже.

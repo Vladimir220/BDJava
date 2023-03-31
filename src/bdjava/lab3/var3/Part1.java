@@ -64,7 +64,7 @@ class House{
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
         House h = (House) obj;
         if (this.getNumberOfDoor() != h.getNumberOfDoor()) return false;
         if (this.getNumberOfWindows() != h.getNumberOfWindows()) return false;
@@ -103,7 +103,7 @@ class Window{
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
         Window w = (Window) obj;
         if (this.ID != w.ID) return false;
         return true;
@@ -134,7 +134,7 @@ class Door{
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
         Door d = (Door) obj;
         if (this.ID != d.ID) return false;
         return true;

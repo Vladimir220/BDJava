@@ -2,6 +2,7 @@ package bdjava.lab3.var4;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -19,7 +20,27 @@ public class Part2 {
     }
 }
 
-class TelephoneExchange {
+class TelephoneStation {
+    private TreeSet <Subscriber> subscribers;
+    private TreeSet <Service> services;
+    private ArrayDeque<Administrator> freeAdmins;
+    public boolean addService (int subID, int servID) {
+        if (freeAdmins.size() == 0 && this.services != null && this.subscribers != null) return false;
+        Administrator admin = this.freeAdmins.getFirst();
+        Service serv = services.stream().filter(c -> subID == c.getID()).findAny().get();
+        Subscriber sub = subscribers.stream().filter(c -> servID == c.getID()).findAny().get();
+        boolean isAdd = admin.addService(sub, serv);
+        this.freeAdmins.addLast(admin);
+        return isAdd;
+    }
+    public boolean delService (int subID, int servID) {
+        if (freeAdmins.size() == 0 && this.services != null && this.subscribers != null) return false;
+        Administrator admin = this.freeAdmins.getFirst();
+        this.busyAdmins.addLast(admin);
+        Service serv = services.stream().filter(c -> subID == c.getID()).findAny().get();
+        Subscriber sub = subscribers.stream().filter(c -> servID == c.getID()).findAny().get();
+        return admin.delService(sub, serv);
+    }
 
 }
 class Service implements Comparable <Service> {
@@ -41,12 +62,13 @@ class Service implements Comparable <Service> {
         this.numOfMinutes = numOfMinutes;
         this.numOfSMS = numOfSMS;
     }
-
     @Override
     public int compareTo(@NotNull Service o) {
         return (this.ID - o.ID);
     }
-
+    public int getID() {
+        return ID;
+    }
     public String getTitle () {
         return this.title;
     }
@@ -67,7 +89,41 @@ class Service implements Comparable <Service> {
     }
 }
 class Administrator {
-    
+    private final int ID;
+    private static int numOfAdmins;
+    private final String name;
+    private final String surname;
+
+    Administrator (String name, String surname) {
+        this.ID = Administrator.numOfAdmins;
+        Administrator.numOfAdmins++;
+        this.name = name;
+        this.surname = surname;
+    }
+    public boolean addService (Subscriber sub, Service serv) {
+        return sub.addService(serv);
+    }
+    public boolean delService (Subscriber sub, Service serv) {
+        return sub.delService(serv);
+    }
+    public void block (Subscriber s) {
+        s.block();
+    }
+    public int getID() {
+        return ID;
+    }
+    public String getSurname() {
+        return surname;
+    }
+    public String getName() {
+        return name;
+    }
+    public void unlock (Subscriber s) {
+        s.unlock();
+    }
+    public void cancelAll (Subscriber s) {
+        s.cancelAll(s);
+    }
 }
 class Subscriber {
     private final int ID;
@@ -98,10 +154,28 @@ class Subscriber {
         // Логику списания за услуги придумает оператор
         return this.balance;
     }
+    public void cancelAll (Subscriber s) {
+        this.services = new TreeSet<Service>();
+    }
     public boolean addService (Service s) {
         return this.services.add(s);
     }
     public boolean delService (Service s) {
         return this.services.remove(s);
+    }
+    public String getSurname() {
+        return surname;
+    }
+    public String getName() {
+        return name;
+    }
+    public int getBalance() {
+        return balance;
+    }
+    public int getID() {
+        return ID;
+    }
+    public boolean getIsBlocked () {
+        return isBlocked;
     }
 }

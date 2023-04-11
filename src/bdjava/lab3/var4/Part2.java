@@ -20,7 +20,6 @@ public class Part2 {
         out.println(ts.getInfo(0));
     }
 }
-//putMoney
 class TelephoneStation {
     private TreeSet <Subscriber> subscribers;
     private TreeSet <Service> services;

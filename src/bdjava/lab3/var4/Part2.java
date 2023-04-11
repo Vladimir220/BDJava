@@ -3,56 +3,93 @@ package bdjava.lab3.var4;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static java.lang.System.out;
 
 public class Part2 {
     public static void main(String[] args) {
-        /*Service s = new Service("sw",2, (short) 44,3.5f,(short) 44,62);
-        Service s2 = new Service("sw",2, (short) 44,3.5f,(short) 44,62);
-        TreeSet<Service> t = new TreeSet<Service>();
-        t.add(s);
-        t.add(s2);
-        out.println(t.remove(s2));*/
+        TelephoneStation ts = new TelephoneStation();
+        out.println(ts.getInfo(0));
+        ts.putMoney(0, 233);
+        ts.addService(0, 0);
+        out.println(ts.getInfo(0));
+        ts.changeNum(0, "+7(342)683-35-67");
+        ts.delService(0,0);
+        ts.putMoney(0,2211);
+        out.println(ts.getInfo(0));
     }
 }
-
+//putMoney
 class TelephoneStation {
     private TreeSet <Subscriber> subscribers;
     private TreeSet <Service> services;
     private ArrayDeque<Administrator> freeAdmins;
+
+    {
+        subscribers = new TreeSet<Subscriber>();
+        services = new TreeSet<Service>();
+        freeAdmins = new ArrayDeque<Administrator>();
+        //для теста:
+        subscribers.add(new Subscriber("Михаил", "Фролов", "+7(342)234-11-46"));
+        services.add(new Service("Переходи на ноль", (short) 400, (short) 30, 15f, (short) 200, (short) 2000));
+        freeAdmins.add(new Administrator("Светлана", "Иванова"));
+    }
     public boolean addService (int subID, int servID) {
-        if (freeAdmins.size() == 0 && this.services != null && this.subscribers != null) return false;
+        if (freeAdmins.size() == 0 && this.services == null && this.subscribers == null) return false;
         Administrator admin = this.freeAdmins.getFirst();
-        Service serv = services.stream().filter(c -> subID == c.getID()).findAny().get();
-        Subscriber sub = subscribers.stream().filter(c -> servID == c.getID()).findAny().get();
+        Service serv = services.stream().filter(c -> servID == c.getID()).findAny().get();
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
         boolean isAdd = admin.addService(sub, serv);
         this.freeAdmins.addLast(admin);
         return isAdd;
     }
     public boolean delService (int subID, int servID) {
-        if (freeAdmins.size() == 0 && this.services != null && this.subscribers != null) return false;
+        if (freeAdmins.size() == 0 && this.services == null && this.subscribers == null) return false;
         Administrator admin = this.freeAdmins.getFirst();
-        this.busyAdmins.addLast(admin);
-        Service serv = services.stream().filter(c -> subID == c.getID()).findAny().get();
-        Subscriber sub = subscribers.stream().filter(c -> servID == c.getID()).findAny().get();
-        return admin.delService(sub, serv);
+        Service serv = services.stream().filter(c -> servID == c.getID()).findAny().get();
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
+        boolean isDell = admin.delService(sub, serv);
+        this.freeAdmins.addLast(admin);
+        return isDell;
     }
-
+    public boolean cancelAllServ (int subID) {
+        if (freeAdmins.size() == 0 && this.subscribers == null) return false;
+        Administrator admin = this.freeAdmins.getFirst();
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
+        admin.cancelAllServ(sub);
+        this.freeAdmins.addLast(admin);
+        return true;
+    }
+    public int putMoney (int subID, int money) {
+        if (this.subscribers == null) return -1;
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
+        return sub.putMoney(money);
+    }
+    public boolean changeNum (int subID, String newNum) {
+        if (freeAdmins.size() == 0 && this.subscribers == null) return false;
+        Administrator admin = this.freeAdmins.getFirst();
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
+        admin.changeNumber(sub, newNum);
+        this.freeAdmins.addLast(admin);
+        return true;
+    }
+    public String getInfo (int subID) {
+        if (this.subscribers == null) return "Пользователь не найден";
+        Subscriber sub = subscribers.stream().filter(c -> subID == c.getID()).findAny().get();
+        return sub.toString();
+    }
 }
 class Service implements Comparable <Service> {
     private final int ID;
     private static int numOfServices;
     private final String title;
-    private final int cost;
+    private final short cost;
     private final short period;
     private final float internetVolumeGB;
     private final short numOfSMS;
     private final int numOfMinutes;
-    Service (String title, int cost, short period, float internetVolumeGB,short numOfSMS, int numOfMinutes) {
+    Service (String title, short cost, short period, float internetVolumeGB,short numOfSMS, short numOfMinutes) {
         this.ID = Service.numOfServices;
         Service.numOfServices++;
         this.title = title;
@@ -115,21 +152,25 @@ class Administrator {
     public String getSurname() {
         return surname;
     }
+    public void changeNumber (Subscriber sub, String num) {
+        sub.setPhoneNumber(num);
+    }
     public String getName() {
         return name;
     }
     public void unlock (Subscriber s) {
         s.unlock();
     }
-    public void cancelAll (Subscriber s) {
-        s.cancelAll(s);
+    public void cancelAllServ (Subscriber s) {
+        s.cancelAllServ(s);
     }
 }
-class Subscriber {
+class Subscriber implements Comparable <Subscriber> {
     private final int ID;
     private static int numOfSubscribers;
     private final String name;
     private final String surname;
+    private String phoneNumber;
     private int balance;
     private TreeSet<Service> services;
     private boolean isBlocked;
@@ -139,6 +180,10 @@ class Subscriber {
         this.name = name;
         this.surname = surname;
         services = new TreeSet<Service>();
+    }
+    Subscriber (String name, String surname, String phoneNumber) {
+        this(name, surname);
+        this.phoneNumber = phoneNumber;
     }
     public void block () {
         this.isBlocked = true;
@@ -154,7 +199,7 @@ class Subscriber {
         // Логику списания за услуги придумает оператор
         return this.balance;
     }
-    public void cancelAll (Subscriber s) {
+    public void cancelAllServ (Subscriber s) {
         this.services = new TreeSet<Service>();
     }
     public boolean addService (Service s) {
@@ -177,5 +222,30 @@ class Subscriber {
     }
     public boolean getIsBlocked () {
         return isBlocked;
+    }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public int compareTo(@NotNull Subscriber o) {
+        return (this.ID - o.ID);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder("Имя: " + getName() + "\n" +
+                "Фамилия: " + getSurname() + "\n" +
+                "Номер: " + getPhoneNumber() + "\n" +
+                "Баланс: " + getBalance() + "\n" +
+                "Заблокирован: " + (getIsBlocked() ? "Да" : "Нет") + "\n" +
+                "Услуги:" + "\n");
+        for(Service s : services)
+            buf.append("ID:" + s.getID() + "\n" +
+                    "Название:" + s.getTitle() + "\n");
+        return buf.toString();
     }
 }

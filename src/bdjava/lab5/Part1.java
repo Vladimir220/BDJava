@@ -23,7 +23,6 @@ public class Part1 {
             out.println("Записываем в файл...");
             FileOutputStream fOutSteam = new FileOutputStream(fileName1);
             ObjectOutputStream outputObjStream = new ObjectOutputStream(fOutSteam);
-            out.println("d");
             outputObjStream.writeObject(cf1);
             outputObjStream.writeObject(cf2);
             fOutSteam.close();
@@ -73,18 +72,22 @@ public class Part1 {
             out.println(f1.toString());
             out.println(f2.toString());
 
-        } catch (ArithmeticException ex) {
+        }
+        catch (ArithmeticException ex) {
             out.println("Арифметическая ошибка!\nСистемная ошибка:");
             out.println(ex.getMessage());
-        } catch (FileNotFoundException ex) {
+        }
+        catch (FileNotFoundException ex) {
             out.println("Файл не найден\nСистемная ошибка:");
             out.println(ex.getMessage());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             out.println("Ошибка записи в поток или создания потока\nСистемная ошибка:");
             out.println(ex.getMessage());
             out.println(ex.getStackTrace().toString());
             ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
+        }
+        catch (ClassNotFoundException ex) {
             out.println("Не найден класс\nСистемная ошибка:");
             out.println(ex.getMessage());
         }

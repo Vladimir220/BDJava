@@ -30,3 +30,4 @@ bin/
 *.exe
 .idea
 *.iml
+*.txt

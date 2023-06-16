@@ -1,0 +1,2 @@
+./src/bdjava/lab5/poem2.txt
+./src/bdjava/lab5/poem_analyze2.txt

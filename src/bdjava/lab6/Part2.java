@@ -1,4 +1,4 @@
-package lab6;
+package bdjava.lab6;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ public class Part2 {
     public static void main(String[] args) {
         ArrayList<String> strings = new ArrayList<>();
         try {
-            Scanner reader = new Scanner(new File("src/lab6/input.txt"));
+            Scanner reader = new Scanner(new File("src/bdjava.lab6/input.txt"));
             while (reader.hasNextLine()) {
                 strings.add(reader.nextLine());
             }

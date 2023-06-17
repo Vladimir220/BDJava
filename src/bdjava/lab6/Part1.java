@@ -1,4 +1,4 @@
-package lab6;
+package bdjava.lab6;
 
 import java.util.ArrayList;
 import static java.lang.System.out;

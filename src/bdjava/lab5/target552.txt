@@ -1,0 +1,2 @@
+./src/bdjava/lab5/text552.txt
+./src/bdjava/lab5/res552.txt

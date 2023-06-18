@@ -1,4 +1,4 @@
-package lab8;
+package bdjava.lab8;
 import java.util.Random;
 
 public class Part1 {

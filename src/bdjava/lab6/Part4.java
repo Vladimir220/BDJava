@@ -1,65 +1,66 @@
 package bdjava.lab6;
-import java.io.File;
-import java.io.FileWriter;
+
 import java.util.*;
 
-public class Part4 {
-    public static void main(String[] args) throws Exception {
-        int n = 5;
-        Point[] points = new Point[n];
-        points[0] = new Point(1, 3);
-        points[1] = new Point(2, 2);
-        points[2] = new Point(3, 1);
-        points[3] = new Point(4, 4);
-        points[4] = new Point(5, 5);
+import static java.lang.System.out;
 
-        Map<String, List<Point>> map = new HashMap<>();
-        // перебираем все точки
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if(i != j) {
-                    String key = getLineKey(points[i], points[j]); // ключ для прямой
-                    if (!map.containsKey(key)) {
-                        map.put(key, new ArrayList<>());
+public class Part4 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        out.print("Введите количество отрезков: ");
+        int n = scanner.nextInt();
+        TreeMap<Integer, List<Segment>> map = new TreeMap<>();
+
+        for (int i = 1; i <= n; i++) {
+            out.print("Введите координаты начала и конца отрезка №" + i + ": ");
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            int c = scanner.nextInt();
+            int d = scanner.nextInt();
+            Segment s = new Segment(a, b, c, d);
+            int minX = Math.min(a, c);
+            if (!map.containsKey(minX)) {
+                map.put(minX, new ArrayList<>());
+            }
+            map.get(minX).add(s);
+        }
+
+        Point minPoint = null;
+        List<Segment> segments = null;
+        Map.Entry<Integer, List<Segment>> entry = map.firstEntry();
+        while (entry != null) {
+            List<Segment> currentSegments = entry.getValue();
+            if (currentSegments.size() > 1) {
+                for (int i = 0; i < currentSegments.size(); i++) {
+                    for (int j = i + 1; j < currentSegments.size(); j++) {
+                        Point p = currentSegments.get(i).intersect(currentSegments.get(j));
+                        if (minPoint == null || p.x < minPoint.x) {
+                            minPoint = p;
+                            segments = new ArrayList<>();
+                            segments.add(currentSegments.get(i));
+                            segments.add(currentSegments.get(j));
+                        }
                     }
-                    map.get(key).add(points[i]);
-                    map.get(key).add(points[j]);
                 }
             }
+            entry = map.higherEntry(entry.getKey());
         }
 
-
-        File file = new File("src/bdjava/lab6/lines.txt");
-        FileWriter writer = new FileWriter(file);
-        for (Map.Entry<String, List<Point>> entry : map.entrySet()) {
-            List<Point> pointsLine = entry.getValue();
-            getUniquePoints(pointsLine);
-            int count = pointsLine.size();
-            writer.write(entry.getKey() + " проходит через " + count + " точек: " + pointsLine.toString() + "\n");
+        if (minPoint != null) {
+            out.println("Точка пересечения двух отрезков с минимальной абсциссой: " + minPoint);
+            out.println("Отрезки, содержащие данную точку:");
+            for (Segment s : segments) {
+                out.println(s);
+            }
+        } else {
+            out.println("Таких отрезков нет.");
         }
-        writer.close();
     }
 
-    public static String getLineKey(Point p1, Point p2) {
-        double k = (double) (p1.y - p2.y) / (p1.x - p2.x);
-        double b = p1.y - k * p1.x;
-        return String.format("y = %.2f x + %.2f", k, b);
-    }
+    static class Point {
+        float x, y;
 
-    public static void getUniquePoints(List<Point> points) {
-        Set<Point> set = new HashSet<>();
-        for (Point point : points) {
-            set.add(point);
-        }
-        points.clear();
-        points.addAll(set);
-    }
-
-    public static class Point {
-        public int x;
-        public int y;
-
-        public Point(int x, int y) {
+        public Point(float x, float y) {
             this.x = x;
             this.y = y;
         }
@@ -67,6 +68,33 @@ public class Part4 {
         @Override
         public String toString() {
             return "(" + x + ", " + y + ")";
+        }
+    }
+
+    static class Segment {
+        int x1, y1, x2, y2;
+
+        public Segment(int x1, int y1, int x2, int y2) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+        }
+        public Point intersect(Segment other) {
+            ArrayList<Integer> lx = new ArrayList<Integer>(Arrays.asList(x1,x2,other.x1,other.x2));
+            ArrayList<Integer> ly = new ArrayList<Integer>(Arrays.asList(y1,y2,other.y1,other.y2));
+            float k1 = (y2-y1)/(x2-x1);
+            float k2 = (other.y2-other.y1)/(other.x2-other.x1);
+            float x = (y1 - other.y1 + k2 * other.x1 - k1 * x1) / (k2 - k1);
+            float y = k1 * (x - x1) + y1;
+            if ((x >= Collections.min(lx) || x <= Collections.max(lx)) && (y >= Collections.min(ly) || y <= Collections.max(ly)))
+                return new Point(x, y);
+            else
+                return null;
+        }
+        @Override
+        public String toString() {
+            return "(" + x1 + ", " + y1 + ") - (" + x2 + ", " + y2 + ")";
         }
     }
 }

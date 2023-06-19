@@ -30,3 +30,7 @@ bin/
 *.exe
 .idea
 *.iml
+spark/
+*.docx
+
+spark/src/main/resources/archetype-resources/pom.xml
